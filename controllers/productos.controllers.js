@@ -24,6 +24,9 @@ const getOne = async (req, res) => {
 const create = async (req, res) => {
   const producto = req.body;
 
+  console.log(producto, "BODY CREATE");
+  
+
   try {
     const productoCreado = await modelos.crearProducto(producto);
     res.status(201).json(handleMongoId(productoCreado));
