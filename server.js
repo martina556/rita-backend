@@ -17,7 +17,6 @@ app.use(cors());
 
 app.use("/api/v1/productos", routerProductos);
 app.use("/api/v1/carritos", routerCarritos);
-app.use("/productos", routerProductos);
 
 
 app.get("/", (req, res) => {
@@ -31,6 +30,7 @@ app.all("*", (req, res) => {
     mensaje: "No se puede acceder al recurso que están queriendo acceder",
   });
 });
+
 
 app.listen(PORT, (err) => {
   if (err) throw new Error("No se pudo levantar el servidor", err);
