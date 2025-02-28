@@ -1,4 +1,4 @@
-name: Deploy rita-backend to K3s
+name: Deploy backend-rita-backend to K3s
 
 on:
   push:
@@ -21,17 +21,17 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          IMAGE_NAME="lucasmaraz/rita-backend"
+          IMAGE_NAME="lucasmaraz/backend-rita-backend"
           docker buildx build --platform linux/amd64 -t ghcr.io/$IMAGE_NAME:latest --push .
 
       - name: Apply Deployment Manifest
-        run: kubectl apply -f k8s/rita-deployment.yaml
+        run: kubectl apply -f k8s/backend-rita-deployment.yaml
 
       - name: Update K3s Deployment
         run: |
-          IMAGE_NAME="lucasmaraz/rita-backend"
-          kubectl set image deployment/rita-deployment rita=ghcr.io/$IMAGE_NAME:latest -n default
-          kubectl rollout status deployment/rita-deployment -n default
+          IMAGE_NAME="lucasmaraz/backend-rita-backend"
+          kubectl set image deployment/backend-rita-deployment backend-rita=ghcr.io/$IMAGE_NAME:latest -n default
+          kubectl rollout status deployment/backend-rita-deployment -n default
 
       - name: Restart K3s Deployment (if needed)
-        run: kubectl rollout restart deployment/rita-deployment -n default
+        run: kubectl rollout restart deployment/backend-rita-deployment -n default
