@@ -8,7 +8,7 @@ import routerCarritos from "./routers/carrito.router.js";
 
 
 const app = express();
-const PORT = process.env.PORT || 2222;
+const PORT = process.env.PORT || 3001;
 const uri_remota = process.env.URI_MONGO;
 
 app.use(morgan())
