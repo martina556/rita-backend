@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rita-backend-deployment
+  labels:
+    app: rita-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rita-backend
+  template:
+    metadata:
+      labels:
+        app: rita-backend
+    spec:
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+      containers:
+        - name: rita-backend
+          image: ghcr.io/martina556/rita-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3001

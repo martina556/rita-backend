@@ -1,0 +1,37 @@
+name: Deploy rita-backend to K3s
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and Push Docker Image
+        run: |
+          IMAGE_NAME="lucasmaraz/rita-backend"
+          docker buildx build --platform linux/amd64 -t ghcr.io/$IMAGE_NAME:latest --push .
+
+      - name: Apply Deployment Manifest
+        run: kubectl apply -f k8s/rita-deployment.yaml
+
+      - name: Update K3s Deployment
+        run: |
+          IMAGE_NAME="lucasmaraz/rita-backend"
+          kubectl set image deployment/rita-deployment rita=ghcr.io/$IMAGE_NAME:latest -n default
+          kubectl rollout status deployment/rita-deployment -n default
+
+      - name: Restart K3s Deployment (if needed)
+        run: kubectl rollout restart deployment/rita-deployment -n default
