@@ -9,6 +9,7 @@ import routerCarritos from "./routers/carrito.router.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const HOST = process.env.HOST || "0.0.0.0";
 const uri_remota = process.env.URI_MONGO;
 
 app.use(morgan())
@@ -32,8 +33,8 @@ app.all("*", (req, res) => {
 });
 
 
-app.listen(PORT, (err) => {
+app.listen(PORT, HOST, (err) => {
   if (err) throw new Error("No se pudo levantar el servidor", err);
-  console.log(`Servidor funcionando en: http://localhost:${PORT}`);
+  console.log(`Servidor funcionando en: http://${HOST}:${PORT}`);
   getConnection(uri_remota);
 });
